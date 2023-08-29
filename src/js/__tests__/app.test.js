@@ -1,33 +1,24 @@
-const Team = require('./Team');
+import Team from '../team';
+import Character from '../character';
 
-describe('Team', () => {
-  it('should add a character to the team', () => {
-      const team = new Team();
-      const character = new Character('Alice');
-      team.add(character);
-      expect([...team.members]).toEqual([character]);
-  });
+test('add, добавляет выбранного персонажа или сообщает об ошибке', () => {
+  const team = new Team();
+  team.add('swordsman');
+  expect(() => team.add('swordsman')).toThrow(new Error('Такой игрок существует в команде'));
+});
 
-  it('should not allow duplicate characters in the team', () => {
-      const team = new Team();
-      const character = new Character('Bob');
-      team.add(character);
-      expect(() => team.add(character)).toThrowError('Character already exists in the team');
-  });
+test('addAll', () => {
+  const players = new Team();
+  const player1 = new Character('swordsman');
+  const player2 = new Character('bowman');
+  const player3 = new Character('magician');
+  players.addAll(player1, player2, player3);
+  expect(players.members.size).toEqual(3);
+});
 
-  it('should add multiple characters to the team using addAll method', () => {
-      const team = new Team();
-      const character1 = new Character('Charlie');
-      const character2 = new Character('David');
-      team.addAll(character1, character2);
-      expect([...team.members]).toEqual([character1, character2]);
-  });
-
-  it('should convert the team to an array using toArray method', () => {
-      const team = new Team();
-      const character1 = new Character('Eve');
-      const character2 = new Character('Frank');
-      team.addAll(character1, character2);
-      expect(team.toArray()).toEqual([character1, character2]);
-  });
+test('конвертация Set в массив', () => {
+  const team = new Team();
+  team.addAll('swordsman', 'magician', 'magician', 'bowman');
+  team.toArray();
+  expect(team.members).toEqual(['swordsman', 'magician', 'bowman']);
 });
